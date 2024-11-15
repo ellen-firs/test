@@ -55,12 +55,14 @@ def get_today_weekday():
 # Интерфейс Streamlit
 st.title("Расписание занятий")
 
+# Загружаем дни недели для выбора
+days_of_week = load_days_of_week()
+
 # Загружаем группы и предлагаем выбор
 groups = load_groups()
 group_names = dict(zip(groups['название'], groups['группа_id']))
 selected_group = st.selectbox("Выберите группу:", list(group_names.keys()))
 
-# Кнопка "Показать расписание" активируется после выбора группы
 if selected_group:
     # Кнопка для отображения расписания
     show_button = st.button("Показать расписание")
@@ -93,8 +95,7 @@ if selected_group:
             st.write(f"Расписание для группы {selected_group} на сегодня ({today_day}):")
             st.dataframe(today_schedule)
 
-    # Загружаем дни недели для выбора
-    days_of_week = load_days_of_week()
+    # Выбор дня недели
     selected_day = st.selectbox("Выберите день недели:", list(days_of_week['название']))
 
     # Кнопка "Показать расписание на выбранный день"
