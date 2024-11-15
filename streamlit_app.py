@@ -78,8 +78,20 @@ if selected_group:
             st.write(f"Расписание для группы {selected_group}:")
             # Убираем индексы с помощью reset_index(drop=True)
             schedule_html = schedule.reset_index(drop=True).to_html(index=False, escape=False)
-            # Добавляем стиль для выравнивания по центру
-            styled_html = f'<div style="text-align: center;">{schedule_html}</div>'
+            # Добавляем стиль для выравнивания текста в ячейках
+            styled_html = f'''
+            <style>
+                table, th, td {{
+                    border: 1px solid black;
+                    border-collapse: collapse;
+                    text-align: center;
+                }}
+                th, td {{
+                    padding: 8px;
+                }}
+            </style>
+            <div>{schedule_html}</div>
+            '''
             st.markdown(styled_html, unsafe_allow_html=True)
 
     # Кнопка "Показать расписание на сегодня"
@@ -100,8 +112,20 @@ if selected_group:
             st.write(f"Расписание для группы {selected_group} на сегодня ({today_day}):")
             # Убираем индексы с помощью reset_index(drop=True)
             today_schedule_html = today_schedule.reset_index(drop=True).to_html(index=False, escape=False)
-            # Добавляем стиль для выравнивания по центру
-            styled_html = f'<div style="text-align: center;">{today_schedule_html}</div>'
+            # Добавляем стиль для выравнивания текста в ячейках
+            styled_html = f'''
+            <style>
+                table, th, td {{
+                    border: 1px solid black;
+                    border-collapse: collapse;
+                    text-align: center;
+                }}
+                th, td {{
+                    padding: 8px;
+                }}
+            </style>
+            <div>{today_schedule_html}</div>
+            '''
             st.markdown(styled_html, unsafe_allow_html=True)
 
     # Выбор дня недели
@@ -123,8 +147,20 @@ if selected_group:
             st.write(f"Расписание для группы {selected_group} на {selected_day}:")
             # Убираем индексы с помощью reset_index(drop=True)
             selected_day_schedule_html = selected_day_schedule.reset_index(drop=True).to_html(index=False, escape=False)
-            # Добавляем стиль для выравнивания по центру
-            styled_html = f'<div style="text-align: center;">{selected_day_schedule_html}</div>'
+            # Добавляем стиль для выравнивания текста в ячейках
+            styled_html = f'''
+            <style>
+                table, th, td {{
+                    border: 1px solid black;
+                    border-collapse: collapse;
+                    text-align: center;
+                }}
+                th, td {{
+                    padding: 8px;
+                }}
+            </style>
+            <div>{selected_day_schedule_html}</div>
+            '''
             st.markdown(styled_html, unsafe_allow_html=True)
 
 
