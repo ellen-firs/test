@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import sqlite3
+import datetime
 
 st.html('<head><script src="https://telegram.org/js/telegram-web-app.js"></script></head>')
 
@@ -15,6 +16,14 @@ def load_groups():
     groups_df = pd.read_sql(query, conn)
     conn.close()
     return groups_df
+
+# Функция для загрузки данных о днях недели из базы данных
+def load_days_of_week():
+    conn = get_connection()
+    query = "SELECT день_id, название FROM Дни_недели ORDER BY день_id"
+    days_df = pd.read_sql(query, conn)
+    conn.close()
+    return days_df
 
 # Функция для загрузки расписания для выбранной группы
 def load_schedule(group_id):
@@ -39,6 +48,11 @@ def load_schedule(group_id):
     conn.close()
     return schedule_df
 
+# Функция для получения текущего дня недели
+def get_today_weekday():
+    today = datetime.datetime.today().weekday()
+    return today
+
 # Интерфейс Streamlit
 st.title("Расписание занятий")
 
@@ -46,6 +60,11 @@ st.title("Расписание занятий")
 groups = load_groups()
 group_names = dict(zip(groups['название'], groups['группа_id']))
 selected_group = st.selectbox("Выберите группу:", list(group_names.keys()))
+
+# Загружаем дни недели для выбора
+days_of_week = load_days_of_week()
+day_names = dict(zip(days_of_week['название'], days_of_week['день_id']))
+selected_day = st.selectbox("Выберите день недели:", list(day_names.keys()))
 
 # Кнопка "Показать", активируется после выбора группы
 if selected_group:
@@ -61,5 +80,37 @@ if selected_group:
             st.write(f"Расписание для группы {selected_group}:")
             st.dataframe(schedule)
 
+    # Кнопка "Показать на сегодня"
+    show_today_button = st.button("Показать на сегодня")
 
+    if show_today_button:
+        today = get_today_weekday()
+        group_id = group_names[selected_group]
+        schedule = load_schedule(group_id)
+
+        # Фильтруем расписание по текущему дню
+        today_day = days_of_week.iloc[today]['название']
+        today_schedule = schedule[schedule['День'] == today_day]
+
+        if today_schedule.empty:
+            st.write(f"Для группы {selected_group} на сегодня расписание отсутствует.")
+        else:
+            st.write(f"Расписание для группы {selected_group} на {today_day}:")
+            st.dataframe(today_schedule)
+
+    # Кнопка "Показать на выбранный день"
+    show_selected_day_button = st.button(f"Показать на {selected_day}")
+
+    if show_selected_day_button:
+        group_id = group_names[selected_group]
+        schedule = load_schedule(group_id)
+
+        # Фильтруем расписание по выбранному дню
+        selected_day_schedule = schedule[schedule['День'] == selected_day]
+
+        if selected_day_schedule.empty:
+            st.write(f"Для группы {selected_group} на {selected_day} расписание отсутствует.")
+        else:
+            st.write(f"Расписание для группы {selected_group} на {selected_day}:")
+            st.dataframe(selected_day_schedule)
 
