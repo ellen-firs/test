@@ -48,13 +48,14 @@ group_names = dict(zip(groups['название'], groups['группа_id']))
 selected_group = st.selectbox("Выберите группу:", list(group_names.keys()))
 
 # Загружаем и отображаем расписание для выбранной группы
-if selected_group:
-    group_id = group_names[selected_group]
-    schedule = load_schedule(group_id)
 
-    if schedule.empty:
-        st.write("Для выбранной группы расписание отсутствует.")
-    else:
-        st.write(f"Расписание для группы {selected_group}:")
+if st.button("Показать расписание"):
+    group_id = group_names[selected_group]
+    schedule = load_schedule(group)
+    if not schedule.empty:
+        st.write(f"Расписание для {group}")
         st.dataframe(schedule)
+    else:
+        st.write("Нет данных для отображения.")
+
 
