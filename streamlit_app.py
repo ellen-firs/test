@@ -77,23 +77,7 @@ if selected_group:
         else:
             st.write(f"Расписание для группы {selected_group}:")
             # Убираем индексы с помощью reset_index(drop=True)
-            schedule_html = schedule.reset_index(drop=True).to_html(index=False, escape=False)
-
-            # Применяем стиль для выравнивания текста по центру в таблице
-            styled_html = f'''
-            <style>
-                table, th, td {{
-                    border: 1px solid black;
-                    border-collapse: collapse;
-                    text-align: center;
-                }}
-                th, td {{
-                    padding: 8px;
-                }}
-            </style>
-            {schedule_html}
-            '''
-            st.markdown(styled_html, unsafe_allow_html=True)
+            st.dataframe(schedule.reset_index(drop=True), use_container_width=True)
 
     # Кнопка "Показать расписание на сегодня"
     show_today_button = st.button("Показать расписание на сегодня")
@@ -112,23 +96,7 @@ if selected_group:
         else:
             st.write(f"Расписание для группы {selected_group} на сегодня ({today_day}):")
             # Убираем индексы с помощью reset_index(drop=True)
-            today_schedule_html = today_schedule.reset_index(drop=True).to_html(index=False, escape=False)
-
-            # Применяем стиль для выравнивания текста по центру в таблице
-            styled_html = f'''
-            <style>
-                table, th, td {{
-                    border: 1px solid black;
-                    border-collapse: collapse;
-                    text-align: center;
-                }}
-                th, td {{
-                    padding: 8px;
-                }}
-            </style>
-            {today_schedule_html}
-            '''
-            st.markdown(styled_html, unsafe_allow_html=True)
+            st.dataframe(today_schedule.reset_index(drop=True), use_container_width=True)
 
     # Выбор дня недели
     selected_day = st.selectbox("Выберите день недели:", list(days_of_week['название']))
@@ -148,23 +116,7 @@ if selected_group:
         else:
             st.write(f"Расписание для группы {selected_group} на {selected_day}:")
             # Убираем индексы с помощью reset_index(drop=True)
-            selected_day_schedule_html = selected_day_schedule.reset_index(drop=True).to_html(index=False, escape=False)
-
-            # Применяем стиль для выравнивания текста по центру в таблице
-            styled_html = f'''
-            <style>
-                table, th, td {{
-                    border: 1px solid black;
-                    border-collapse: collapse;
-                    text-align: center;
-                }}
-                th, td {{
-                    padding: 8px;
-                }}
-            </style>
-            {selected_day_schedule_html}
-            '''
-            st.markdown(styled_html, unsafe_allow_html=True)
+            st.dataframe(selected_day_schedule.reset_index(drop=True), use_container_width=True)
 
 
 
