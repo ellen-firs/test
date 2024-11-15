@@ -4,6 +4,7 @@ import sqlite3
 import datetime
 
 st.html('<head><script src="https://telegram.org/js/telegram-web-app.js"></script></head>')
+
 # Подключение к базе данных SQLite
 def get_connection():
     return sqlite3.connect("schedule.db")
@@ -75,8 +76,7 @@ if selected_group:
             st.write("Ура, выходной!")
         else:
             st.write(f"Расписание для группы {selected_group}:")
-            st.dataframe(schedule)
-            st.dataframe(schedule, use_container_width=True, index=False)
+            st.dataframe(schedule, use_container_width=True, index=False)  # Убираем индексы
 
     # Кнопка "Показать расписание на сегодня"
     show_today_button = st.button("Показать расписание на сегодня")
@@ -94,8 +94,7 @@ if selected_group:
             st.write("Ура, выходной!")
         else:
             st.write(f"Расписание для группы {selected_group} на сегодня ({today_day}):")
-            st.dataframe(today_schedule)
-            st.dataframe(schedule, use_container_width=True, index=False)
+            st.dataframe(today_schedule, use_container_width=True, index=False)  # Убираем индексы
 
     # Выбор дня недели
     selected_day = st.selectbox("Выберите день недели:", list(days_of_week['название']))
@@ -114,5 +113,5 @@ if selected_group:
             st.write("Ура, выходной!")
         else:
             st.write(f"Расписание для группы {selected_group} на {selected_day}:")
-            st.dataframe(selected_day_schedule)
-            st.dataframe(schedule, use_container_width=True, index=False)
+            st.dataframe(selected_day_schedule, use_container_width=True, index=False)  # Убираем индексы
+
