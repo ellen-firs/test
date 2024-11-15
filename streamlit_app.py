@@ -76,6 +76,7 @@ if selected_group:
             st.write("Ура, выходной!")
         else:
             st.write(f"Расписание для группы {selected_group}:")
+            st.dataframe(schedule)
 
     # Кнопка "Показать расписание на сегодня"
     show_today_button = st.button("Показать расписание на сегодня")
@@ -93,7 +94,7 @@ if selected_group:
             st.write("Ура, выходной!")
         else:
             st.write(f"Расписание для группы {selected_group} на сегодня ({today_day}):")
-
+            st.dataframe(today_schedule)
 
     # Выбор дня недели
     selected_day = st.selectbox("Выберите день недели:", list(days_of_week['название']))
@@ -112,6 +113,8 @@ if selected_group:
             st.write("Ура, выходной!")
         else:
             st.write(f"Расписание для группы {selected_group} на {selected_day}:")
+            st.dataframe(selected_day_schedule)
+
 
 
 
