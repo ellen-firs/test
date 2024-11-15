@@ -4,51 +4,57 @@ import sqlite3
 
 st.html('<head><script src="https://telegram.org/js/telegram-web-app.js"></script></head>')
 
-# Функция для подключения к базе данных
+# Подключение к базе данных SQLite
 def get_connection():
-    return sqlite3.connect('schedule.db')  # Замените на путь к вашей базе данных
+    return sqlite3.connect("schedule.db")
 
-# Функция для получения списка групп (для примера, вручную)
-def get_groups():
-    return ["Группа A", "Группа B"]
-
-# Функция для получения расписания для выбранной группы
-def get_schedule(group):
-    # Создаем подключение к базе данных
+# Функция для загрузки данных групп из базы данных
+def load_groups():
     conn = get_connection()
-    
-    # Пример запроса к расписанию; в реальной БД группы следует добавить в таблицы
-    query = """
-        SELECT ДеньНедели.название AS 'День недели', Время.начало || ' - ' || Время.конец AS 'Время',
-               Дисциплины.название AS 'Дисциплина', Преподаватели.имя || ' ' || Преподаватели.фамилия AS 'Преподаватель',
-               Аудитории.номер || ', ' || Аудитории.здание AS 'Аудитория'
-        FROM Расписание
-        JOIN Дисциплины ON Расписание.дисциплина_id = Дисциплины.дисциплина_id
-        JOIN Преподаватели ON Расписание.преподаватель_id = Преподаватели.преподаватель_id
-        JOIN Время ON Расписание.время_id = Время.время_id
-        JOIN ДеньНедели ON Расписание.день_id = ДеньНедели.день_id
-        JOIN Аудитории ON Расписание.аудитория_id = Аудитории.аудитория_id
-        WHERE Расписание.дисциплина_id IN (
-            SELECT дисциплина_id FROM Дисциплины WHERE название IN 
-                ('Математика', 'Физика')  -- Эти дисциплины только для примера, можно менять
-        )
-        ORDER BY ДеньНедели.день_id, Время.начало
-    """
-    schedule = pd.read_sql(query, conn)
+    query = "SELECT группа_id, название FROM Группы"
+    groups_df = pd.read_sql(query, conn)
     conn.close()
-    return schedule
+    return groups_df
 
-# Заголовок приложения
+# Функция для загрузки расписания для выбранной группы
+def load_schedule(group_id):
+    conn = get_connection()
+    query = """
+    SELECT
+        Дисциплины.название AS Дисциплина,
+        Преподаватели.имя || ' ' || Преподаватели.фамилия AS Преподаватель,
+        Время.время_начала || ' - ' || Время.время_окончания AS Время,
+        Дни_недели.название AS День,
+        Аудитории.номер AS Аудитория
+    FROM Расписание
+    JOIN Дисциплины ON Расписание.дисциплина_id = Дисциплины.дисциплина_id
+    JOIN Преподаватели ON Расписание.преподаватель_id = Преподаватели.преподаватель_id
+    JOIN Время ON Расписание.время_id = Время.время_id
+    JOIN Дни_недели ON Расписание.день_id = Дни_недели.день_id
+    JOIN Аудитории ON Расписание.аудитория_id = Аудитории.аудитория_id
+    WHERE Расписание.группа_id = ?
+    ORDER BY Дни_недели.день_id, Время.время_начала
+    """
+    schedule_df = pd.read_sql(query, conn, params=(group_id,))
+    conn.close()
+    return schedule_df
+
+# Интерфейс Streamlit
 st.title("Расписание занятий")
 
-# Выпадающий список для выбора группы
-group = st.selectbox("Выберите группу", get_groups())
+# Загружаем группы и предлагаем выбор
+groups = load_groups()
+group_names = dict(zip(groups['название'], groups['группа_id']))
+selected_group = st.selectbox("Выберите группу:", list(group_names.keys()))
 
-# Кнопка для отображения расписания
-if st.button("Показать расписание"):
-    schedule = get_schedule(group)
-    if not schedule.empty:
-        st.write(f"Расписание для {group}")
-        st.dataframe(schedule)
+# Загружаем и отображаем расписание для выбранной группы
+if selected_group:
+    group_id = group_names[selected_group]
+    schedule = load_schedule(group_id)
+
+    if schedule.empty:
+        st.write("Для выбранной группы расписание отсутствует.")
     else:
-        st.write("Нет данных для отображения.")
+        st.write(f"Расписание для группы {selected_group}:")
+        st.dataframe(schedule)
+
