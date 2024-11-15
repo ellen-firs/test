@@ -78,7 +78,8 @@ if selected_group:
             st.write(f"Расписание для группы {selected_group}:")
             # Убираем индексы с помощью reset_index(drop=True)
             schedule_html = schedule.reset_index(drop=True).to_html(index=False, escape=False)
-            # Добавляем стиль для выравнивания текста в ячейках
+
+            # Применяем стиль для выравнивания текста по центру в таблице
             styled_html = f'''
             <style>
                 table, th, td {{
@@ -90,7 +91,7 @@ if selected_group:
                     padding: 8px;
                 }}
             </style>
-            <div>{schedule_html}</div>
+            {schedule_html}
             '''
             st.markdown(styled_html, unsafe_allow_html=True)
 
@@ -112,7 +113,8 @@ if selected_group:
             st.write(f"Расписание для группы {selected_group} на сегодня ({today_day}):")
             # Убираем индексы с помощью reset_index(drop=True)
             today_schedule_html = today_schedule.reset_index(drop=True).to_html(index=False, escape=False)
-            # Добавляем стиль для выравнивания текста в ячейках
+
+            # Применяем стиль для выравнивания текста по центру в таблице
             styled_html = f'''
             <style>
                 table, th, td {{
@@ -124,7 +126,7 @@ if selected_group:
                     padding: 8px;
                 }}
             </style>
-            <div>{today_schedule_html}</div>
+            {today_schedule_html}
             '''
             st.markdown(styled_html, unsafe_allow_html=True)
 
@@ -147,7 +149,8 @@ if selected_group:
             st.write(f"Расписание для группы {selected_group} на {selected_day}:")
             # Убираем индексы с помощью reset_index(drop=True)
             selected_day_schedule_html = selected_day_schedule.reset_index(drop=True).to_html(index=False, escape=False)
-            # Добавляем стиль для выравнивания текста в ячейках
+
+            # Применяем стиль для выравнивания текста по центру в таблице
             styled_html = f'''
             <style>
                 table, th, td {{
@@ -159,8 +162,9 @@ if selected_group:
                     padding: 8px;
                 }}
             </style>
-            <div>{selected_day_schedule_html}</div>
+            {selected_day_schedule_html}
             '''
             st.markdown(styled_html, unsafe_allow_html=True)
+
 
 
