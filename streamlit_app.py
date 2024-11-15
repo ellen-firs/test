@@ -78,7 +78,9 @@ if selected_group:
             st.write(f"Расписание для группы {selected_group}:")
             # Убираем индексы с помощью reset_index(drop=True)
             schedule_html = schedule.reset_index(drop=True).to_html(index=False, escape=False)
-            st.markdown(schedule_html, unsafe_allow_html=True)
+            # Добавляем стиль для выравнивания по центру
+            styled_html = f'<div style="text-align: center;">{schedule_html}</div>'
+            st.markdown(styled_html, unsafe_allow_html=True)
 
     # Кнопка "Показать расписание на сегодня"
     show_today_button = st.button("Показать расписание на сегодня")
@@ -98,7 +100,9 @@ if selected_group:
             st.write(f"Расписание для группы {selected_group} на сегодня ({today_day}):")
             # Убираем индексы с помощью reset_index(drop=True)
             today_schedule_html = today_schedule.reset_index(drop=True).to_html(index=False, escape=False)
-            st.markdown(today_schedule_html, unsafe_allow_html=True)
+            # Добавляем стиль для выравнивания по центру
+            styled_html = f'<div style="text-align: center;">{today_schedule_html}</div>'
+            st.markdown(styled_html, unsafe_allow_html=True)
 
     # Выбор дня недели
     selected_day = st.selectbox("Выберите день недели:", list(days_of_week['название']))
@@ -119,6 +123,8 @@ if selected_group:
             st.write(f"Расписание для группы {selected_group} на {selected_day}:")
             # Убираем индексы с помощью reset_index(drop=True)
             selected_day_schedule_html = selected_day_schedule.reset_index(drop=True).to_html(index=False, escape=False)
-            st.markdown(selected_day_schedule_html, unsafe_allow_html=True)
+            # Добавляем стиль для выравнивания по центру
+            styled_html = f'<div style="text-align: center;">{selected_day_schedule_html}</div>'
+            st.markdown(styled_html, unsafe_allow_html=True)
 
 
